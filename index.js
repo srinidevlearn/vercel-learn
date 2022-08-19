@@ -1,5 +1,25 @@
 // Add Express
 const express = require("express");
+const mongoose = require("mongoose");
+
+
+const connectDatabase = async () => {
+  try {
+
+
+    
+    await mongoose.connect(process.env.MONGODBURL || "mongodb://localhost:27017",{
+          useNewUrlParser: true,
+          useUnifiedTopology: true,
+        });
+
+    console.log("connected to database");
+  } catch (error) {
+    console.log(error);
+    process.exit(1);
+  }
+};
+connectDatabase();
 
 // Initialize Express
 const app = express();
