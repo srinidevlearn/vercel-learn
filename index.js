@@ -5,10 +5,11 @@ mongoose.Promise = global.Promise;
 const router = require("./routes/routes");
 let  env = require("dotenv");
 env = env.config();
+const bodyParser = require("body-parser");
 const connectDatabase = async () => {
   try {
 
-console.log(env)
+
     
     await mongoose.connect(env.parsed.MONGODBURL,{
           useNewUrlParser: true,
@@ -25,7 +26,8 @@ connectDatabase();
 
 // Initialize Express
 const app = express();
-
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: false }));
 app.use("/api", router);
 // console.log(router);
 // Create GET request

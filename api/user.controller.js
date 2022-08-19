@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const { sendJwtToken } = require("../jwt.helper");
 const { failedResponse, successResponse,ObjectId } = require("../util/response.helper");
 
 
@@ -121,6 +122,46 @@ const createUserDetail = async (req, res, next) => {
   }
 };
 
+
+const register = async (req, res) => {
+  try {
+    let { body } = req;
+    let { email, password } = body;
+    if(!email) throw new Error("Email is missing");
+    if(!password) throw new Error("Password is missing");
+
+    const data = await User.findOne({ email }).then((res) => res);
+    if (data) {
+      throw new Error("A user with this email already exist please login.");
+    }
+    await User.create({ email, password });
+    return successResponse(res, "Registered successfully");
+  } catch (e) {
+    return failedResponse(res, e.toString());
+  }
+};
+
+const login = async (req, res) => {
+  try {
+    let { body } = req;
+    let { email, password } = body;
+    if(!email) throw new Error("Email is missing");
+    if(!password) throw new Error("Password is missing");
+    const data = await User.findOne({ email, password }).lean();
+    if (!data) {
+      throw new Error("Login failed,Please try with correct email/password");
+    }
+    if(data.password) delete data.password;
+    let user = {user:data,userId:data._id.toString()}
+    return successResponse(res, {token:sendJwtToken(user),message:'Logged in succesfully'});
+  } catch (e) {
+    return failedResponse(res, e.toString());
+  }
+};
+
+const AuthController = { register, login };
+
+
 const UserController = {
   getAllUsers,
   getUser,
@@ -129,5 +170,5 @@ const UserController = {
   deleteUserDetail,
   createUserDetail,
 };
-module.exports = {UserController,User};
+module.exports = {UserController,AuthController,User};
 
