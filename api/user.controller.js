@@ -1,4 +1,23 @@
 const mongoose = require("mongoose");
+const { failedResponse, successResponse,ObjectId } = require("../util/response.helper");
+// const connectDatabase = async () => {
+//   try {
+
+
+    
+//     await mongoose.connect(process.env.MONGODBURL || "mongodb://localhost:27017",{
+//           useNewUrlParser: true,
+//           useUnifiedTopology: true,
+//         });
+
+//     console.log("connected to database");
+//   } catch (error) {
+//     console.log(error);
+//     process.exit(1);
+//   }
+// };
+// connectDatabase();
+
 let Schema = mongoose.Schema;
 
 let UserSchema = new Schema(
@@ -52,8 +71,8 @@ const getAllUsers = async (req, res) => {
   }
 };
 const UserController = {
-  getAllUsers,
+  getAllUsers
 };
 
-module.exports = UserController;
-module.exports = User;
+module.exports = {UserController,User};
+

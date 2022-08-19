@@ -1,14 +1,16 @@
 // Add Express
 const express = require("express");
 const mongoose = require("mongoose");
-
-
+mongoose.Promise = global.Promise;
+const router = require("./routes/routes");
+let  env = require("dotenv");
+env = env.config();
 const connectDatabase = async () => {
   try {
 
-
+console.log(env)
     
-    await mongoose.connect(process.env.MONGODBURL || "mongodb://localhost:27017",{
+    await mongoose.connect(env.parsed.MONGODBURL,{
           useNewUrlParser: true,
           useUnifiedTopology: true,
         });
@@ -24,6 +26,8 @@ connectDatabase();
 // Initialize Express
 const app = express();
 
+app.use("/api", router);
+// console.log(router);
 // Create GET request
 app.get("/", (req, res) => {
   res.send("Express on Vercel");
@@ -33,6 +37,5 @@ app.get("/", (req, res) => {
 app.listen(5000, () => {
   console.log("Running on port 5000.");
 });
-app.use("/api", router);
 // Export the Express API
 module.exports = app;
