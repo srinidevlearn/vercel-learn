@@ -41,13 +41,15 @@ var User = mongoose.model("users", UserSchema);
 const getUser = async (req, res) => {
   let { id } = req.params;
   try {
-    const data = await User.findOne({ email: id })
-    .then((res) => res.toJSON());
+    const data = await User.findById(id).lean()
+    .then((res) => res);
     if (!data) {
         
       throw new Error("A user with this email could not be found.");
     }
-    return successResponse(res, data);
+    if(data.password) delete data.password;
+    let user = {user:data,userId:data._id.toString()}
+    return successResponse(res, user);
   } catch (e) {
     return failedResponse(res, e.toString());
   }
