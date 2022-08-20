@@ -226,7 +226,6 @@ const ProductController = {
   getProductByIds,
 };
 
-module.exports = ProductController;
 
 module.exports = {ProductController,Product};
 
