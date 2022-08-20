@@ -23,9 +23,11 @@ const connectDatabase = async () => {
   }
 };
 connectDatabase();
-
+const cors = require("cors");
 // Initialize Express
 const app = express();
+app.use(cors());
+
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use("/api", router);
